@@ -228,7 +228,7 @@ class ManualReporter:
         '''
         Saves the Workbook in Current Directory.
         '''
-        newfile = "Untimed l "+str(datetime.date.today())+".xlsx."
+        newfile = "Untimed Report"+str(datetime.date.today())+".xlsx."
         self.wb_wt.save(filename = newfile)
         print("Save Done!")
 
