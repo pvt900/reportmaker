@@ -1,0 +1,16 @@
+WEB
+1
+http://share-internal.deere.com/teams/IEsuptJDWW/Components/_vti_bin/owssvr.dll?XMLDATA=1&List={46E0BCBD-5CCF-4980-AC2A-07E768EDF0C1}&View={C0E9A0D1-0E86-4269-9650-FE15335815D6}&RowLimit=0&RootFolder=%2fteams%2fIEsuptJDWW%2fComponents%2fLists%2fWorktracker%20Test
+
+Selection={46E0BCBD-5CCF-4980-AC2A-07E768EDF0C1}-{C0E9A0D1-0E86-4269-9650-FE15335815D6}
+EditWebPage=
+Formatting=None
+PreFormattedTextToColumns=True
+ConsecutiveDelimitersAsOne=True
+SingleBlockTextImport=False
+DisableDateRecognition=False
+DisableRedirections=False
+SharePointApplication=http://share-internal.deere.com/teams/IEsuptJDWW/Components/_vti_bin
+SharePointListView={C0E9A0D1-0E86-4269-9650-FE15335815D6}
+SharePointListName={46E0BCBD-5CCF-4980-AC2A-07E768EDF0C1}
+RootFolder=/teams/IEsuptJDWW/Components/Lists/Worktracker Test
