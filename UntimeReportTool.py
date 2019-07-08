@@ -264,7 +264,7 @@ class ManualReporter:
         for row in sheet.iter_rows():
             key = (row[0].value)
             indexed_programs[key] = row[1].value
-        del indexed_programs[None]
+       #del indexed_programs[None]
         wt.insert_cols(12)
         for rows in wt.iter_rows():
             keys = (rows[3].value)

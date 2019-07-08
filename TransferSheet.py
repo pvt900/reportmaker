@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from collections import defaultdict
+from UntimeReportTool import ManualReporter
 import collections
 import datetime
 import time
@@ -20,6 +21,19 @@ class TransferSheet:
         self.utbook = load_workbook(filename='Untimed Report2019-06-26.xlsx')
         self.macbook = load_workbook(
             filename='UploadUntimed.xlsm', keep_vba=True)
+    def run_report_tool(self):
+        Report = ManualReporter()
+        Report.open_sapfile()
+        Report.open_tracker()
+        Report.trim_report()
+        Report.check_rows()
+        Report.CreateReport()
+        Report.payables()
+        Report.worktracker_scanner()
+        Report.part_programs()
+        Report.count_programs()
+        Report.final_report()
+        Report.save_workbook()
 
     def transfer_report(self):
         '''
@@ -44,23 +58,8 @@ class TransferSheet:
             if index_mac.get(key) == None:
                 new_mac.append([cell.value for cell in ut_rows])
 
-
-#        for row in utsheet.iter_rows():
-#            if row not in macsheet.iter_rows(): #row alrdy in MacSheet.
-#                new_mac.append([cell.value for cell in row])
-#            else: #row not in macsheet:
-#                continue
-
         std = self.macbook.worksheets[0]
         self.macbook.remove(std)
-        # Clear MacSheet - Needs Revisions to Ensure Functionality.
-#        for data_rows in macsheet.iter_rows():
-#            for data_cell in data_rows:
-#                data_cell.value = None
-
-        # Adds UT Parts from Report to MacSheet.
-#        for row in utsheet.iter_rows():
-#            macsheet.append([cell.value for cell in row])
 
     def save_sheet(self):
         '''
@@ -106,14 +105,17 @@ class TransferSheet:
 
 def main():
     x = TransferSheet()
-    print("Initialized")
+    print("Script Initialized")
+    x.run_report_tool()
+    print("Untimed Ran")
+    currentReport = "Untimed Report"+str(datetime.date.today())+".xlsx."
+    x.utbook = load_workbook(filename= currentReport)
     x.transfer_report()
-    print("Transferred!")
+    print("Data Transferred!")
     x.save_sheet()
-    print("Saved!")
+    print("Saved! & Ready For Macro!")
     # x.run_macro()
     # print("Done!")
-
 
 if __name__ == "__main__":
     main()
