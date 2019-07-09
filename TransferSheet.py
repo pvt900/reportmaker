@@ -18,7 +18,7 @@ class TransferSheet:
         Initializes all Variables for use within the ClassProgram
         '''
         Tk().withdraw()
-        self.utbook = load_workbook(filename='Untimed Report2019-06-26.xlsx')
+        self.utbook = None
         self.macbook = load_workbook(
             filename='UploadUntimed.xlsm', keep_vba=True)
     def run_report_tool(self):
@@ -48,7 +48,7 @@ class TransferSheet:
 
         index_mac = {}
 
-        rows_to_add = []
+        estimates_only = ["F9","F9A","F9B","F11A","7RMY20", "F9X"]
         print(bool(index_mac))
         for mac_rows in macsheet.iter_rows():
             key = (mac_rows[3].value, mac_rows[2].value)
@@ -56,7 +56,8 @@ class TransferSheet:
         for ut_rows in utsheet.iter_rows():
             key = (ut_rows[3].value, ut_rows[2].value)
             if index_mac.get(key) == None:
-                new_mac.append([cell.value for cell in ut_rows])
+                if ut_rows[12].value not in estimates_only:
+                    new_mac.append([cell.value for cell in ut_rows])
 
         std = self.macbook.worksheets[0]
         self.macbook.remove(std)
@@ -108,8 +109,9 @@ def main():
     print("Script Initialized")
     x.run_report_tool()
     print("Untimed Ran")
-    currentReport = "Untimed Report"+str(datetime.date.today())+".xlsx."
-    x.utbook = load_workbook(filename= currentReport)
+    currentReport = ("Untimed Report"+str(datetime.date.today()))
+    x.utbook = load_workbook(filename= str(currentReport)+".xlsx")
+    print("Book Loaded!")
     x.transfer_report()
     print("Data Transferred!")
     x.save_sheet()

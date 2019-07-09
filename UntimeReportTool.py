@@ -118,9 +118,9 @@ class ManualReporter:
             if row[7].value == "MS":
                 ws1.append([cell.value for cell in row])
                 continue
-            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "":
+            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE INSPECTION" not in row[9].value and "TEMPORARY CHECK" not in row[9].value:
                 ws1.append([cell.value for cell in row])
-
+            
     def check_rows(self):
         '''
        Compares the Unfiltered Untimed Report from Last Month to This Month.
@@ -366,27 +366,27 @@ class ManualReporter:
                             self.x_issued += 1
                         else:
                             self.me_approval += 1
-
-
-def main():
-    #This is the MAIN this will run the Program. Don't touch it unless adding Functions
-
-    x = ManualReporter()
-    x.open_sapfile()
-    x.open_tracker()
-    progS = time.time()
-    x.trim_report()
-    x.check_rows()
-    x.CreateReport()
-    x.payables()
-    x.worktracker_scanner()
-    x.part_programs()
-    x.count_programs()
-    x.final_report()
-    x.save_workbook()
-    progE = time.time()
-    print("Program Runtime: ", progE - progS)
-
-
-if __name__ == "__main__":
-    main()
+##
+##
+##def main():
+##    #This is the MAIN this will run the Program. Don't touch it unless adding Functions
+##
+##    x = ManualReporter()
+##    x.open_sapfile()
+##    x.open_tracker()
+##    progS = time.time()
+##    x.trim_report()
+##    x.check_rows()
+##    x.CreateReport()
+##    x.payables()
+##    x.worktracker_scanner()
+##    x.part_programs()
+##    x.count_programs()
+##    x.final_report()
+##    x.save_workbook()
+##    progE = time.time()
+##    print("Program Runtime: ", progE - progS)
+##
+##
+##if __name__ == "__main__":
+##    main()
