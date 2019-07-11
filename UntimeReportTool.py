@@ -1,17 +1,17 @@
-##Made by Robert Farmer
-## For DTO at Waterloo Works
-## First Report should be the Oldest, Second Report should be the Newest
-## First Report is known as the SAP variables while the Second has the WT variables.
-## Don't Ask me Why Its a carryover from older iterations.
-## If you ask why there are so many Comments it's to prevent the unwant modification of the code and to help
-## Aide in the Repair of the Code in the event it is broken by editing something somewhere.
+# Made by Robert Farmer
+# For DTO at Waterloo Works
+# First Report should be the Oldest, Second Report should be the Newest
+# First Report is known as the SAP variables while the Second has the WT variables.
+# Don't Ask me Why Its a carryover from older iterations.
+# If you ask why there are so many Comments it's to prevent the unwant modification of the code and to help
+# Aide in the Repair of the Code in the event it is broken by editing something somewhere.
 ##
 ##
-##To-DO:
+# To-DO:
 ##
 ##
 ##
-##These are the Module Imports don't touch them if you delete them or change them accidently you will break the corresponding code.
+# These are the Module Imports don't touch them if you delete them or change them accidently you will break the corresponding code.
 
 from openpyxl import load_workbook
 from openpyxl.worksheet.table import Table, TableStyleInfo
@@ -23,8 +23,8 @@ import collections
 import datetime
 import time
 
-##    D I S C L A I M E R
-##    DO NOT EDIT UNLESS NECESSARY
+# D I S C L A I M E R
+# DO NOT EDIT UNLESS NECESSARY
 
 
 class ManualReporter:
@@ -45,12 +45,12 @@ class ManualReporter:
         self.total = 0  # Total Untimed Parts
         self.deadrows = []  # Rows to Exclude
         self.changes = set()  # Part Changes
-        #Variables for Worktracker Func.
+        # Variables for Worktracker Func.
         self.x_issued = 0
         self.t_issued = 0
         self.me_approval = 0
         self.costhr = 0
-        #Part Program Variables - Add Program Variables here
+        # Part Program Variables - Add Program Variables here
         self.fnine = 0
         self.sevenr = 0
         self.lynx = 0
@@ -80,7 +80,7 @@ class ManualReporter:
         self.wb_sap = load_workbook(filename=self.sap_file)
         # Code to create a backup File in-case of Error or Fault
         #copyfile = "Untimed_Report_Old_" + str(datetime.date.today())+".xlsx"
-        #self.wb_sap.save(copyfile)
+        # self.wb_sap.save(copyfile)
 
     def open_tracker(self):
         '''
@@ -91,7 +91,7 @@ class ManualReporter:
         self.tracker_file = askopenfilename(title="Open Latest SAP Dump")
         self.wb_wt = load_workbook(filename=self.tracker_file)
         #copyfile = "Untimed_Report_New_"+str(datetime.date.today())+".xlsx"
-        #self.wb_wt.save(copyfile)
+        # self.wb_wt.save(copyfile)
 
     def trim_report(self):
         '''
@@ -118,9 +118,9 @@ class ManualReporter:
             if row[7].value == "MS":
                 ws1.append([cell.value for cell in row])
                 continue
-            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE INSPECTION" not in row[9].value and "TEMPORARY CHECK" not in row[9].value:
+            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE IN" not in row[9].value and "TEMPORARY CHECK" not in row[9].value:
                 ws1.append([cell.value for cell in row])
-            
+
     def check_rows(self):
         '''
        Compares the Unfiltered Untimed Report from Last Month to This Month.
@@ -138,7 +138,7 @@ class ManualReporter:
                 self.deadrows.append(wtrow)
             key = (wtrow[3].value, wtrow[2].value)
             indexed_wt[key] = wtrow
-        #for wtrow in wt.iter_rows():# Creates a Dictionary of the New Report's Trimmed Sheet
+        # for wtrow in wt.iter_rows():# Creates a Dictionary of the New Report's Trimmed Sheet
         #    key = (wtrow[3].value, wtrow[2].value)
         #    indexed_wt[key].append(wtrow)
         saprows = list(sap.iter_rows())
@@ -156,9 +156,9 @@ class ManualReporter:
                     self.XT += 1  # Increment X->Ts Counts
                 else:
                     self.TT += 1  # Increment T->T Count
-        #This Print Counts the Xs->Ts Discounting any Duplicates.
+        # This Print Counts the Xs->Ts Discounting any Duplicates.
         #print (len([item for item, count in collections.Counter(lst).items() if count > 1]))
-
+ 
     def CreateReport(self):
         '''
         Takes the List made in the check_rows function and creates a new sheet
@@ -199,7 +199,7 @@ class ManualReporter:
         # Deletes the Summations from Prev. Reports
         ws.delete_rows(refs, refs+1)
         currentDT = datetime.datetime.now()  # Current Data
-        #Variable Data is the data that get written to the Report
+        # Variable Data is the data that get written to the Report
         data = [[currentDT.strftime("%Y/%m/%d"), self.fnine, self.feleven, (self.ins + self.tooling + self.rci),
                  self.sevenr, self.lynx, self.new, (
                      self.pre+self.saturn+self.maxim+self.legacy+self.aeros+self.isis),
@@ -216,12 +216,12 @@ class ManualReporter:
         # Sets Table Style based on the Table Style information parsed in the two lines above.
         tab.tableStyleInfo = style
         ws.add_table(tab)  # Finally Enables the Table to appear
-        #Theese Lines Write the Summations for the Xiss, Tiss, X->T
+        # Theese Lines Write the Summations for the Xiss, Tiss, X->T
         ws['M'+str(tablelength+1)] = "=SUM(M2:M" + str(tablelength) + ")"
         ws['N'+str(tablelength+1)] = "=SUM(N2:N" + str(tablelength) + ")"
         ws['O'+str(tablelength+1)] = "=SUM(O2:O" + str(tablelength) + ")"
 
-        #Style of Page Below
+        # Style of Page Below
         ws.page_setup.fitToHeight = 0
         ws.page_setup.fitToWidth = 1
         i = 0
@@ -368,25 +368,25 @@ class ManualReporter:
                             self.me_approval += 1
 ##
 ##
-##def main():
-##    #This is the MAIN this will run the Program. Don't touch it unless adding Functions
+# def main():
+# This is the MAIN this will run the Program. Don't touch it unless adding Functions
 ##
 ##    x = ManualReporter()
-##    x.open_sapfile()
-##    x.open_tracker()
+# x.open_sapfile()
+# x.open_tracker()
 ##    progS = time.time()
-##    x.trim_report()
-##    x.check_rows()
-##    x.CreateReport()
-##    x.payables()
-##    x.worktracker_scanner()
-##    x.part_programs()
-##    x.count_programs()
-##    x.final_report()
-##    x.save_workbook()
+# x.trim_report()
+# x.check_rows()
+# x.CreateReport()
+# x.payables()
+# x.worktracker_scanner()
+# x.part_programs()
+# x.count_programs()
+# x.final_report()
+# x.save_workbook()
 ##    progE = time.time()
 ##    print("Program Runtime: ", progE - progS)
 ##
 ##
-##if __name__ == "__main__":
-##    main()
+# if __name__ == "__main__":
+# main()
