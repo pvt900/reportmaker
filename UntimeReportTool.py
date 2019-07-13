@@ -101,19 +101,7 @@ class ManualReporter:
         # Create a Spare Sheet in the First Report to place the Adjusted Data
         ws1 = self.wb_wt.create_sheet("Sheet 1 - Sorted", 1)
         ws1 = self.wb_wt.worksheets[1]  # Sets ws1 as the Active Second Sheet for New Data\
-        """
-        for row in wt.iter_rows():
-            if row[4].value in ("F"):
-                self.deadrows.append(row)
-            elif "AS" in row[8].value:
-                self.deadrows.append(row)
-            elif row[7].value != "MS" and int(row[7].value) >= 60:
-                    self.deadrows.append(row)
-            elif row not in self.deadrows and row[0].value == "":
-                self.deadrows.append(row)
-            else:
-                ws1.append([cell.value for cell in row])
-        """
+
         for row in wt.iter_rows():
             if row[7].value == "MS":
                 ws1.append([cell.value for cell in row])
@@ -367,7 +355,7 @@ class ManualReporter:
                         else:
                             self.me_approval += 1
 ##
-##
+## This is the Previous Main Function. It's Use is for Debugging the Untimed Tool only.
 # def main():
 # This is the MAIN this will run the Program. Don't touch it unless adding Functions
 ##
@@ -389,4 +377,6 @@ class ManualReporter:
 ##
 ##
 # if __name__ == "__main__":
+
 # main()
+
