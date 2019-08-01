@@ -345,7 +345,7 @@ class ManualReporter:
             if "Date of Ch" not in str(row[1].value):
                 #date = datetime.datetime.strptime(row[1].value[:10], "%Y-%m-%d")
                 date = row[1].value
-                # its in the Format of "Year-Month" so, to Scan for Feburary 2020 you'd put "2020-02"
+                # its in the Format of "Year-Month-Day" so, to Scan for Feburary 4th 2020 you'd put "2020-02-04"
                 if (lower <= date <= upper):
                     if row[7].value != "Std Type":
                         if row[7].value == "T":
@@ -358,7 +358,8 @@ class ManualReporter:
 ## This is the Previous Main Function. It's Use is for Debugging the Untimed Tool only.
 # def main():
 # This is the MAIN this will run the Program. Don't touch it unless adding Functions
-##
+## While Deprecated because of the TransferSheet Script this can be used to test modifications
+## to the code without using the TransferSheet Script. 
 ##    x = ManualReporter()
 # x.open_sapfile()
 # x.open_tracker()
