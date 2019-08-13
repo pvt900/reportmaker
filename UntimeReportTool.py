@@ -188,7 +188,7 @@ class ManualReporter:
         ws.delete_rows(refs, refs+1)
         currentDT = datetime.datetime.now()  # Current Data
         # Variable Data is the data that get written to the Report
-        data = [[currentDT.strftime("%Y/%m/%d"), self.fnine, self.feleven, (self.ins + self.tooling + self.rci),
+        data = [[currentDT.strftime("%m/%d/%Y"), self.fnine, self.feleven, (self.ins + self.tooling + self.rci),
                  self.sevenr, self.lynx, self.new, (
                      self.pre+self.saturn+self.maxim+self.legacy+self.aeros+self.isis),
                  self.total, self.NP, self.P, self.me_approval, self.x_issued, self.t_issued, self.XT, 0, 0, 0, 0, 0, self.costhr]]
@@ -214,8 +214,8 @@ class ManualReporter:
         ws.page_setup.fitToWidth = 1
         i = 0
         cols = ws.max_column
-        for i in range(cols+1):
-            ws[chr(65+i)+"1"].alignment = Alignment(wrap_text=True)
+        #for i in range(cols + 1):
+        #   ws[chr(65+i)+str(1)].alignment = Alignment(wrap_text=True)
             #ws['A'+str(i+1)].alignment = Alignment(wrap_text = True)
 
     def payables(self):
@@ -356,28 +356,26 @@ class ManualReporter:
                             self.me_approval += 1
 ##
 ## This is the Previous Main Function. It's Use is for Debugging the Untimed Tool only.
-# def main():
+
 # This is the MAIN this will run the Program. Don't touch it unless adding Functions
 ## While Deprecated because of the TransferSheet Script this can be used to test modifications
-## to the code without using the TransferSheet Script. 
-##    x = ManualReporter()
-# x.open_sapfile()
-# x.open_tracker()
-##    progS = time.time()
-# x.trim_report()
-# x.check_rows()
-# x.CreateReport()
-# x.payables()
-# x.worktracker_scanner()
-# x.part_programs()
-# x.count_programs()
-# x.final_report()
-# x.save_workbook()
-##    progE = time.time()
-##    print("Program Runtime: ", progE - progS)
-##
-##
-# if __name__ == "__main__":
-
-# main()
+## to the code without using the TransferSheet Script.
+def main():
+    x = ManualReporter()
+    x.open_sapfile()
+    x.open_tracker()
+    progS = time.time()
+    x.trim_report()
+    x.check_rows()
+    x.CreateReport()
+    x.payables()
+    x.worktracker_scanner()
+    x.part_programs()
+    x.count_programs()
+    x.final_report()
+    x.save_workbook()
+    progE = time.time()
+    print("Program Runtime: ", progE - progS)
+if __name__ == "__main__":
+     main()
 
