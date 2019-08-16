@@ -5,7 +5,7 @@
 # Don't Ask me Why Its a carryover from older iterations.
 # If you ask why there are so many Comments it's to prevent the unwant modification of the code and to help
 # Aide in the Repair of the Code in the event it is broken by editing something somewhere.
-##
+# This was Programmed Using OpenPyXL and the Documentation is here: https://openpyxl.readthedocs.io/en/stable/
 ##
 # To-DO:
 ##
@@ -326,12 +326,12 @@ class ManualReporter:
         print("Enter the Dates Year-Month-Day, like so: 2018-01-01\n")
         try:
             lower = str(input("Enter the Lower Date: "))
-            if lower == " ":
+            if lower == "":
                 lower = datetime.datetime.now().strftime('%Y-%m-%d')
             else:
                 lower = datetime.datetime.strptime(lower, "%Y-%m-%d")
             upper = str(input("Enter the Upper Date: "))
-            if upper == " ":
+            if upper == "":
                 upper = datetime.datetime.now().strftime("%Y-%m-%d")
             else:
                 upper = datetime.datetime.strptime(upper, "%Y-%m-%d")
@@ -360,22 +360,24 @@ class ManualReporter:
 # This is the MAIN this will run the Program. Don't touch it unless adding Functions
 ## While Deprecated because of the TransferSheet Script this can be used to test modifications
 ## to the code without using the TransferSheet Script.
-def main():
-    x = ManualReporter()
-    x.open_sapfile()
-    x.open_tracker()
-    progS = time.time()
-    x.trim_report()
-    x.check_rows()
-    x.CreateReport()
-    x.payables()
-    x.worktracker_scanner()
-    x.part_programs()
-    x.count_programs()
-    x.final_report()
-    x.save_workbook()
-    progE = time.time()
-    print("Program Runtime: ", progE - progS)
-if __name__ == "__main__":
-     main()
+
+
+#def main():
+#    x = ManualReporter()
+#    x.open_sapfile()
+#    x.open_tracker()
+#    progS = time.time()
+#    x.trim_report()
+#    x.check_rows()
+#    x.CreateReport()
+#    x.payables()
+#    x.worktracker_scanner()
+#    x.part_programs()
+#    x.count_programs()
+#    x.final_report()
+#    x.save_workbook()
+#    progE = time.time()
+#    print("Program Runtime: ", progE - progS)
+#if __name__ == "__main__":
+#     main()
 

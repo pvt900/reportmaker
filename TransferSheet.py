@@ -54,7 +54,7 @@ class TransferSheet:
 
         index_mac = {} # Initializes the Dictionary
         #Estimates Only List is to Exclude the Future Product Parts from The Ready Board.
-        estimates_only = ["F9","F9A","F9B","F11A","7RMY20", "F9X"]
+
         #print(bool(index_mac))
         for mac_rows in macsheet.iter_rows(): # Creates Key-Value Dictionary for Iteration
             key = (mac_rows[3].value, mac_rows[2].value)
@@ -62,8 +62,7 @@ class TransferSheet:
         for ut_rows in utsheet.iter_rows(): # Iterates Through the Rows of the Report
             key = (ut_rows[3].value, ut_rows[2].value) # Part/Op is the Key
             if index_mac.get(key) == None: # if the current Key from Row X doesn't exist
-                if ut_rows[12].value not in estimates_only: # And if the Program isn't in the Estimates List
-                    new_mac.append([cell.value for cell in ut_rows]) # Add it to the Sheet
+                new_mac.append([cell.value for cell in ut_rows]) # Add it to the Sheet
 
         std = self.macbook.worksheets[0] # Sets the Old Macro Sheet as std
         self.macbook.remove(std) # Deletes the old Sheet so the New Populated Sheet is the only One
