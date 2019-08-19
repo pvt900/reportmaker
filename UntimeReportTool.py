@@ -6,6 +6,7 @@
 # If you ask why there are so many Comments it's to prevent the unwant modification of the code and to help
 # Aide in the Repair of the Code in the event it is broken by editing something somewhere.
 # This was Programmed Using OpenPyXL and the Documentation is here: https://openpyxl.readthedocs.io/en/stable/
+# Use the Documentation to make edits and understand the Module's Syntax
 ##
 # To-DO:
 ##
@@ -357,9 +358,9 @@ class ManualReporter:
 ##
 ## This is the Previous Main Function. It's Use is for Debugging the Untimed Tool only.
 
-# This is the MAIN this will run the Program. Don't touch it unless adding Functions
+## This is the MAIN this will run the Program. Don't touch it unless adding Functions
 ## While Deprecated because of the TransferSheet Script this can be used to test modifications
-## to the code without using the TransferSheet Script.
+## to the code without using the TransferSheet Script, It's Quicker and Easier to Debug Issues.
 
 
 #def main():

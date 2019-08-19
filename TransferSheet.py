@@ -1,6 +1,10 @@
 ## TransferSheet.py Created by Robert Farmer
-## Created to Transfer the Untimed Data from the Untimed Report
-## To a Workbook containing a Macro that will upload new In-Product parts to the Ready Board.
+## For RX01 - DTO
+## Supervisor: Jim Croskrey
+## This Program will call the ManualReporter Program to crunch the raw SAP Data.
+## Once the Data is Crunched it will compared and transfer any NEW data within the Macro Excel File
+## Once this is done, you can open the file and run the Macro to upload any new Untimed Parts.
+## Upload takes a variable amount of time based on the number of new parts.
 ##
 from openpyxl import load_workbook
 from tkinter import Tk
@@ -20,14 +24,16 @@ class TransferSheet:
         '''
         Initializes all Variables for use within the ClassProgram
         '''
-        Tk().withdraw()
-        self.utbook = None
+        Tk().withdraw() # Removes Tkinter Interface popups
+        self.utbook = None #Set a None for Later
         self.macbook = load_workbook(
-            filename='UploadUntimed.xlsm', keep_vba=True)
+            filename='UploadUntimed.xlsm', keep_vba=True) #keep_vba=True is important to keep the Macro in the file.
     def run_report_tool(self):
         '''
         This Function calls the Untimed Report Tool and Runs the Report tool
         '''
+        #This Function Imports the Report Running Tool and Runs the Functions within.
+        #Just Call this Function to run the Tool in its entirety. 
         Report = ManualReporter()
         Report.open_sapfile()
         Report.open_tracker()
@@ -55,7 +61,6 @@ class TransferSheet:
         index_mac = {} # Initializes the Dictionary
         #Estimates Only List is to Exclude the Future Product Parts from The Ready Board.
 
-        #print(bool(index_mac))
         for mac_rows in macsheet.iter_rows(): # Creates Key-Value Dictionary for Iteration
             key = (mac_rows[3].value, mac_rows[2].value)
             index_mac[key] = mac_rows # The Row w/ a Key of a Part/Op is added to the Dictionary.
@@ -69,7 +74,7 @@ class TransferSheet:
 
     def save_sheet(self):
         '''
-        Saves the Work Book.
+        Saves the Work Book as an .XLSM extension to ensure the Macro survives the transfer.
         '''
         self.macbook.save(filename='UploadUntimed.xlsm')
 
@@ -99,6 +104,9 @@ class TransferSheet:
             xl.Application.Quit()
             del xl
 
+##
+## This is the Main Section, This is where the Program is Called and Ran. 
+## Don't edit this Section unless 100% you know what you're editting.
 
 def main():
     x = TransferSheet()
@@ -112,6 +120,7 @@ def main():
     print("Data Transferred!")
     x.save_sheet()
     print("Saved! & Ready For Macro!")
+    # Don't Uncomment these Lines. They are for a Deprecated Function Currently.
     # x.run_macro()
     # print("Done!")
 
