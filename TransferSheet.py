@@ -45,6 +45,7 @@ class TransferSheet:
         Report.part_programs()
         Report.count_programs()
         Report.final_report()
+        Report.final_report2()
         Report.save_workbook()
 
     def transfer_report(self):

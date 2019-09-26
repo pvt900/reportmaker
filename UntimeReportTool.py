@@ -35,6 +35,7 @@ class ManualReporter:
         Hides the tkinter pop-up when using the file dialog
         '''
         Tk().withdraw()
+        self.error_count = 0 # This is a Counting Variable to Count missed Parts. 
         self.sap_file = None
         self.tracker_file = None
         self.wb_sap = None
@@ -43,7 +44,8 @@ class ManualReporter:
         self.TT = 0  # T's -> T's
         self.NP = 0  # Non Payables (E)
         self.P = 0  # Payables (X)
-        self.total = 0  # Total Untimed Parts
+        self.total_dto = 0  # Total Untimed Parts for DTO
+        self.total_spo = 0 # Total Untimed Parts for SPO
         self.deadrows = []  # Rows to Exclude
         self.changes = set()  # Part Changes
         # Variables for Worktracker Func.
@@ -52,24 +54,15 @@ class ManualReporter:
         self.me_approval = 0
         self.costhr = 0
         # Part Program Variables - Add Program Variables here
-        self.fnine = 0
-        self.sevenr = 0
-        self.lynx = 0
-        self.pre = 0
-        self.saturn = 0
-        self.legacy = 0
-        self.tooling = 0
-        self.ins = 0
-        self.aeros = 0
-        self.isis = 0
-        self.new = 0
-        self.rci = 0
-        self.mult = 0
-        self.maxim = 0
-        self.leopard = 0
-        self.feleven = 0
-        self.ninerx = 0
-        self.ngt = 0
+        # It is now in a Dictionary Format "Key":Value
+        # To add a Program type the EXACT! program name that shows in the report
+        # Like so: "F13B":0, then follow with a 0. The program should pickup on it by itself.
+
+        self.dto = {'F9':0,"F9A":0,"F9B":0,"7RMY20":0,"LYNX":0, "Pre-IT4":0,"Saturn":0,"Legacy":0,
+        "Tooling":0,"Insourced":0,"Aeros":0,"Isis":0,"None":0,"RCI":0,"Multiple":0,"Maximus":0,"Leopard":0,"F11A":0,"F9X":0,"NGT":0}
+
+        self.spo = {'F9':0,"F9A":0,"F9B":0,"7RMY20":0,"LYNX":0, "Pre-IT4":0,"Saturn":0,"Legacy":0,
+        "Tooling":0,"Insourced":0,"Aeros":0,"Isis":0,"None":0,"RCI":0,"Multiple":0,"Maximus":0,"Leopard":0,"F11A":0,"F9X":0,"NGT":0}
 
     def open_sapfile(self):
         '''
@@ -107,7 +100,7 @@ class ManualReporter:
             if row[7].value == "MS":
                 ws1.append([cell.value for cell in row])
                 continue
-            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE IN" not in row[9].value and "TEMPORARY CHECK" not in row[9].value:
+            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE IN" not in row[9].value and "TEMPORARY CHECK" not in row[9].value and "ME" not in row[1].value and "72531" not in row[1].value and "76823" not in row[1].value and "INTERFACTORY ROUTING" not in row[9].value and "72515" not in row[1].value:
                 ws1.append([cell.value for cell in row])
 
     def check_rows(self):
@@ -170,7 +163,7 @@ class ManualReporter:
         for changed in self.changes:
             ws2.append([cell.value for cell in changed])
         # Subtracting 1 from Total Rows because Row 1 is a Header. Thus Exclude it from Count.
-        self.total = (ws1.max_row - 1)
+
 
     def final_report(self):
         '''
@@ -178,28 +171,79 @@ class ManualReporter:
         It will Write the Data needed in the current iteration of the Reports and append it to the Sheet.
         Then it will make the Data appear as a Table in the very last Excel Sheet.
         '''
-        ws = self.wb_wt.create_sheet("Final Report", 4)
+        ws = self.wb_wt.create_sheet("DTO Report", 4)
         ws = self.wb_wt.worksheets[4]
-
         wt4 = self.wb_sap.worksheets[4]
+        
         for rows in wt4.iter_rows():  # This Will Append the Previous Data from any Other Reports
-            ws.append([cell.value for cell in rows])
+                ws.append([cell.value for cell in rows])
         refs = ws.max_row  # This Establishes the Length of that Data
         # Deletes the Summations from Prev. Reports
         ws.delete_rows(refs, refs+1)
         currentDT = datetime.datetime.now()  # Current Data
         # Variable Data is the data that get written to the Report
-        data = [[currentDT.strftime("%m/%d/%Y"), self.fnine, self.feleven, (self.ins + self.tooling + self.rci),
-                 self.sevenr, self.lynx, self.new, (
-                     self.pre+self.saturn+self.maxim+self.legacy+self.aeros+self.isis),
-                 self.total, self.NP, self.P, self.me_approval, self.x_issued, self.t_issued, self.XT, 0, 0, 0, 0, 0, self.costhr]]
+        data = [[currentDT.strftime("%m/%d/%Y"), (self.dto["F9"] + self.dto["F9A"] + self.dto["F9B"] + self.dto["F9X"]),
+         self.dto["F11A"], (self.dto["Insourced"] + self.dto["Tooling"] + self.dto["RCI"]), self.dto["7RMY20"],self.dto["LYNX"],self.dto["None"],
+          (self.dto["Maximus"]+self.dto["Saturn"]+self.dto["Legacy"]+self.dto["Pre-IT4"]+self.dto["Aeros"]+self.dto["Isis"]), 
+          self.NP,self.P,self.me_approval,self.x_issued,self.t_issued,self.XT,0,0,0,0,0, self.costhr ]]
         for row in data:  # Appends the Data Row to the Report
             ws.append(row)
         tablelength = ws.max_row  # Determines the Length of the Table w/ the Data now
         # Creates Dimensions for the Table based on that Length
         tableref = "A1:U" + str(tablelength)
         # Creates the Table with a Display Name and the ref. Ref is the prev. Line
-        tab = Table(displayName="Data", ref=tableref)
+        tab = Table(displayName="DTOTable", ref=tableref)
+        style = TableStyleInfo(name="TableStyleDark2", showFirstColumn=True,
+                               showLastColumn=True, showRowStripes=True, showColumnStripes=True)
+        # Sets Table Style based on the Table Style information parsed in the two lines above.
+        tab.tableStyleInfo = style
+        ws.add_table(tab)  # Finally Enables the Table to appear
+        # Theese Lines Write the Summations for the Xiss, Tiss, X->T
+        ws['M'+str(tablelength+1)] = "=SUM(M2:M" + str(tablelength) + ")"
+        ws['N'+str(tablelength+1)] = "=SUM(N2:N" + str(tablelength) + ")"
+        ws['O'+str(tablelength+1)] = "=SUM(O2:O" + str(tablelength) + ")"
+
+        # Style of Page Below
+        ws.page_setup.fitToHeight = 0
+        ws.page_setup.fitToWidth = 1
+        i = 0
+        cols = ws.max_column
+        #for i in range(cols + 1):
+        #   ws[chr(65+i)+str(1)].alignment = Alignment(wrap_text=True)
+            #ws['A'+str(i+1)].alignment = Alignment(wrap_text = True)
+
+    def final_report2(self):
+        '''
+        This Class will Take the data from the other classes and create a Second Report to be used for SPO.
+        It will Write the Data needed in the current iteration of the Reports and append it to the Sheet.
+        Then it will make the Data appear as a Table in the very last Excel Sheet.
+        '''
+        ws = self.wb_wt.create_sheet("SPO Report", 5)
+        ws = self.wb_wt.worksheets[5]
+        wt4 = self.wb_sap.worksheets[5]
+
+        for rows in wt4.iter_rows():  # This Will Append the Previous Data from any Other Reports
+                ws.append([cell.value for cell in rows])
+        refs = ws.max_row  # This Establishes the Length of that Data
+        # Deletes the Summations from Prev. Reports
+        ws.delete_rows(refs, refs+1)
+        currentDT = datetime.datetime.now()  # Current Data
+        # Variable Data is the data that get written to the Report
+        #data = [[currentDT.strftime("%m/%d/%Y"), self.fnine, self.feleven, (self.ins + self.tooling + self.rci),
+        #         self.sevenr, self.lynx, self.new, (
+        #             self.pre+self.saturn+self.maxim+self.legacy+self.aeros+self.isis),
+        #         (self.cipp + self.noncipp), self.NP, self.P, self.me_approval, self.x_issued, self.t_issued, self.XT, 0, 0, 0, 0, 0, self.costhr]]
+        data = [[currentDT.strftime("%m/%d/%Y"), (self.spo["F9"] + self.spo["F9A"] + self.spo["F9B"] + self.spo["F9X"]),
+         self.spo["F11A"], (self.spo["Insourced"] + self.spo["Tooling"] + self.spo["RCI"]), self.spo["7RMY20"],self.spo["LYNX"],self.spo["None"],
+          (self.spo["Maximus"]+self.spo["Saturn"]+self.spo["Legacy"]+self.spo["Pre-IT4"]+self.spo["Aeros"]+self.spo["Isis"]), 
+          self.NP,self.P,self.me_approval,self.x_issued,self.t_issued,self.XT,0,0,0,0,0, self.costhr ]]
+        for row in data:  # Appends the Data Row to the Report
+            ws.append(row)
+        tablelength = ws.max_row  # Determines the Length of the Table w/ the Data now
+        # Creates Dimensions for the Table based on that Length
+        tableref = "A1:U" + str(tablelength)
+        # Creates the Table with a Display Name and the ref. Ref is the prev. Line
+        tab = Table(displayName="SPOTable", ref=tableref)
         style = TableStyleInfo(name="TableStyleDark1", showFirstColumn=True,
                                showLastColumn=True, showRowStripes=True, showColumnStripes=True)
         # Sets Table Style based on the Table Style information parsed in the two lines above.
@@ -271,43 +315,23 @@ class ManualReporter:
         The variable needs to be created and intialized to 0 for it to work.
         '''
         wt = self.wb_wt.worksheets[2]
+        SPO= ["RX01225", "RX01303", "RX01304", "RX01314", "RX01338"]
         for row in wt.iter_rows():
-            if "F9" in row[11].value:
-                self.fnine += 1
-            elif "7RMY20" in row[11].value:
-                self.sevenr += 1
-            elif "LYNX" in row[11].value:
-                self.lynx += 1
-            elif "Pre-IT4" in row[11].value:
-                self.pre += 1
-            elif "Saturn" in row[11].value:
-                self.saturn += 1
-            elif "Legacy" in row[11].value:
-                self.legacy += 1
-            elif "Tooling" in row[11].value:
-                self.tooling += 1
-            elif "Insourced" in row[11].value:
-                self.ins += 1
-            elif "Aeros" in row[11].value:
-                self.aeros += 1
-            elif "Isis" in row[11].value:
-                self.isis += 1
-            elif "RCI" in row[11].value:
-                self.rci += 1
-            elif "Multiple" in row[11].value:
-                self.mult += 1
-            elif "Maximus" in row[11].value:
-                self.maxim += 1
-            elif "Leopard" in row[11].value:
-                self.leopard += 1
-            elif "F11" in row[11].value:
-                self.feleven += 1
-            elif "9RX" in row[11].value:
-                self.ninerx += 1
-            elif "NGT" in row[11].value:
-                self.ngt += 1
-            elif "None" in row[11].value:
-                self.new += 1
+            if row[0].value in SPO:
+                try:
+                    self.spo[row[11].value] += 1
+                except KeyError:
+                    continue
+                self.total_spo += 1
+            elif row[0].value not in SPO:
+                try:
+                    self.dto[row[11].value] += 1
+                except KeyError:
+                    continue
+                self.total_dto += 1
+            
+            else:
+                self.error_count += 1
 
     def worktracker_scanner(self):
         '''
@@ -319,12 +343,12 @@ class ManualReporter:
         Click the box and uptop near the address bar two boxes will appear called ITEMS and LIST
         Click List and Export to Excel. Open the file that it Downloads and save as wtbook.xlsx in the
         same directory as this file.
-        '''
+        ''' 
         filedir = 'wtbook.xlsx'
         wb = load_workbook(filename=filedir)
         sheet = wb.active
         print("If your input is blank it will default to today")
-        print("Enter the Dates Year-Month-Day, like so: 2018-01-01\n")
+        print("Enter the Dates Year-Month-Day, like so: 2019-01-01\n")
         try:
             lower = str(input("Enter the Lower Date: "))
             if lower == "":
