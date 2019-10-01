@@ -57,7 +57,7 @@ class ManualReporter:
         # It is now in a Dictionary Format "Key":Value
         # To add a Program type the EXACT! program name that shows in the report
         # Like so: "F13B":0, then follow with a 0. The program should pickup on it by itself.
-
+        self.dept_spo = ["RX01225", "RX01303", "RX01304", "RX01314", "RX01338"]
         self.dto = {'F9':0,"F9A":0,"F9B":0,"7RMY20":0,"LYNX":0, "Pre-IT4":0,"Saturn":0,"Legacy":0,
         "Tooling":0,"Insourced":0,"Aeros":0,"Isis":0,"None":0,"RCI":0,"Multiple":0,"Maximus":0,"Leopard":0,"F11A":0,"F9X":0,"NGT":0}
 
@@ -315,15 +315,14 @@ class ManualReporter:
         The variable needs to be created and intialized to 0 for it to work.
         '''
         wt = self.wb_wt.worksheets[2]
-        SPO= ["RX01225", "RX01303", "RX01304", "RX01314", "RX01338"]
         for row in wt.iter_rows():
-            if row[0].value in SPO:
+            if row[0].value in self.dept_spo:
                 try:
                     self.spo[row[11].value] += 1
                 except KeyError:
                     continue
                 self.total_spo += 1
-            elif row[0].value not in SPO:
+            elif row[0].value not in self.dept_spo:
                 try:
                     self.dto[row[11].value] += 1
                 except KeyError:
