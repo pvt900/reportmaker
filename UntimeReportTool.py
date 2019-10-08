@@ -44,6 +44,8 @@ class ManualReporter:
         self.TT = 0  # T's -> T's
         self.NP = 0  # Non Payables (E)
         self.P = 0  # Payables (X)
+        self.PSPO # Payables for SPO(X)
+        self.NPSPO # NonPayables for SPO(E)
         self.total_dto = 0  # Total Untimed Parts for DTO
         self.total_spo = 0 # Total Untimed Parts for SPO
         self.deadrows = []  # Rows to Exclude
@@ -52,6 +54,9 @@ class ManualReporter:
         self.x_issued = 0
         self.t_issued = 0
         self.me_approval = 0
+        self.x_issued_spo = 0
+        self.t_issued_spo = 0
+        self.me_approval_spo = 0
         self.costhr = 0
         # Part Program Variables - Add Program Variables here
         # It is now in a Dictionary Format "Key":Value
@@ -100,7 +105,7 @@ class ManualReporter:
             if row[7].value == "MS":
                 ws1.append([cell.value for cell in row])
                 continue
-            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE IN" not in row[9].value and "TEMPORARY CHECK" not in row[9].value and "ME" not in row[1].value and "72531" not in row[1].value and "76823" not in row[1].value and "INTERFACTORY ROUTING" not in row[9].value and "72515" not in row[1].value:
+            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE IN" not in row[9].value and "TEMPORARY CHECK" not in row[9].value and "ME" not in row[1].value and "72531" not in row[1].value and "76823" not in row[1].value and "INTERFACTORY ROUTING" not in row[9].value and "72515" not in row[1].value and "Release In" not in row[1].value and "Temporary Check" not in row[1].value and "TEMPORARY CHECK" not in row[1].value:
                 ws1.append([cell.value for cell in row])
 
     def check_rows(self):
@@ -184,7 +189,7 @@ class ManualReporter:
         # Variable Data is the data that get written to the Report
         data = [[currentDT.strftime("%m/%d/%Y"), (self.dto["F9"] + self.dto["F9A"] + self.dto["F9B"] + self.dto["F9X"]),
          self.dto["F11A"], (self.dto["Insourced"] + self.dto["Tooling"] + self.dto["RCI"]), self.dto["7RMY20"],self.dto["LYNX"],self.dto["None"],
-          (self.dto["Maximus"]+self.dto["Saturn"]+self.dto["Legacy"]+self.dto["Pre-IT4"]+self.dto["Aeros"]+self.dto["Isis"]), 
+          (self.dto["Maximus"]+self.dto["Saturn"]+self.dto["Legacy"]+self.dto["Pre-IT4"]+self.dto["Multiple"]+self.dto["Aeros"]+self.dto["Isis"]), self.total_dto,
           self.NP,self.P,self.me_approval,self.x_issued,self.t_issued,self.XT,0,0,0,0,0, self.costhr ]]
         for row in data:  # Appends the Data Row to the Report
             ws.append(row)
@@ -235,8 +240,8 @@ class ManualReporter:
         #         (self.cipp + self.noncipp), self.NP, self.P, self.me_approval, self.x_issued, self.t_issued, self.XT, 0, 0, 0, 0, 0, self.costhr]]
         data = [[currentDT.strftime("%m/%d/%Y"), (self.spo["F9"] + self.spo["F9A"] + self.spo["F9B"] + self.spo["F9X"]),
          self.spo["F11A"], (self.spo["Insourced"] + self.spo["Tooling"] + self.spo["RCI"]), self.spo["7RMY20"],self.spo["LYNX"],self.spo["None"],
-          (self.spo["Maximus"]+self.spo["Saturn"]+self.spo["Legacy"]+self.spo["Pre-IT4"]+self.spo["Aeros"]+self.spo["Isis"]), 
-          self.NP,self.P,self.me_approval,self.x_issued,self.t_issued,self.XT,0,0,0,0,0, self.costhr ]]
+          (self.spo["Maximus"]+self.spo["Saturn"]+self.spo["Legacy"]+self.spo["Pre-IT4"]+self.spo["Multiple"]+self.spo["Aeros"]+self.spo["Isis"]), self.total_spo,
+          self.NP,self.P,self.me_approval_spo,self.x_issued_spo,self.t_issued_spo,self.XT,0,0,0,0,0, self.costhr ]]
         for row in data:  # Appends the Data Row to the Report
             ws.append(row)
         tablelength = ws.max_row  # Determines the Length of the Table w/ the Data now
@@ -269,10 +274,16 @@ class ManualReporter:
         '''
         sheet = self.wb_wt.worksheets[2]
         for row in sheet.iter_rows():
-            if row[4].value is "X":
-                self.P += 1
-            elif row[4].value is "E":
-                self.NP += 1
+            if row[0].value in self.dept_spo:
+                if row[4].value is "X":
+                    self.PSPO += 1
+                elif row[4].value is "E":
+                    self.NPSPO += 1
+            else:
+                if row[4].value is "X":
+                    self.P += 1
+                elif row[4].value is "E":
+                    self.NP += 1
 
     def save_workbook(self):
         '''
@@ -343,6 +354,7 @@ class ManualReporter:
         Click List and Export to Excel. Open the file that it Downloads and save as wtbook.xlsx in the
         same directory as this file.
         ''' 
+        spo = ["225", "303", "304", "314", "338"]
         filedir = 'wtbook.xlsx'
         wb = load_workbook(filename=filedir)
         sheet = wb.active
@@ -372,12 +384,20 @@ class ManualReporter:
                 # its in the Format of "Year-Month-Day" so, to Scan for Feburary 4th 2020 you'd put "2020-02-04"
                 if (lower <= date <= upper):
                     if row[7].value != "Std Type":
-                        if row[7].value == "T":
-                            self.t_issued += 1
-                        elif row[7].value == "X":
-                            self.x_issued += 1
+                        if row[2].value in SPO:
+                            if row[7].value == "T":
+                                self.t_issued_spo += 1
+                            elif row[7].value == "X":
+                                self.x_issued_spo += 1
+                            else:
+                                self.me_approval_spo +=1
                         else:
-                            self.me_approval += 1
+                            if row[7].value == "T":
+                                self.t_issued += 1
+                            elif row[7].value == "X":
+                                self.x_issued += 1
+                            else:
+                                self.me_approval += 1
 ##
 ## This is the Previous Main Function. It's Use is for Debugging the Untimed Tool only.
 
