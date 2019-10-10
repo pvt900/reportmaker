@@ -44,8 +44,8 @@ class ManualReporter:
         self.TT = 0  # T's -> T's
         self.NP = 0  # Non Payables (E)
         self.P = 0  # Payables (X)
-        self.PSPO # Payables for SPO(X)
-        self.NPSPO # NonPayables for SPO(E)
+        self.PSPO = 0 # Payables for SPO(X)
+        self.NPSPO = 0 # NonPayables for SPO(E)
         self.total_dto = 0  # Total Untimed Parts for DTO
         self.total_spo = 0 # Total Untimed Parts for SPO
         self.deadrows = []  # Rows to Exclude
@@ -241,7 +241,7 @@ class ManualReporter:
         data = [[currentDT.strftime("%m/%d/%Y"), (self.spo["F9"] + self.spo["F9A"] + self.spo["F9B"] + self.spo["F9X"]),
          self.spo["F11A"], (self.spo["Insourced"] + self.spo["Tooling"] + self.spo["RCI"]), self.spo["7RMY20"],self.spo["LYNX"],self.spo["None"],
           (self.spo["Maximus"]+self.spo["Saturn"]+self.spo["Legacy"]+self.spo["Pre-IT4"]+self.spo["Multiple"]+self.spo["Aeros"]+self.spo["Isis"]), self.total_spo,
-          self.NP,self.P,self.me_approval_spo,self.x_issued_spo,self.t_issued_spo,self.XT,0,0,0,0,0, self.costhr ]]
+          self.NPSPO,self.PSPO,self.me_approval_spo,self.x_issued_spo,self.t_issued_spo,self.XT,0,0,0,0,0, self.costhr ]]
         for row in data:  # Appends the Data Row to the Report
             ws.append(row)
         tablelength = ws.max_row  # Determines the Length of the Table w/ the Data now
@@ -354,7 +354,7 @@ class ManualReporter:
         Click List and Export to Excel. Open the file that it Downloads and save as wtbook.xlsx in the
         same directory as this file.
         ''' 
-        spo = ["225", "303", "304", "314", "338"]
+        SPO = ["225", "303", "304", "314", "338"]
         filedir = 'wtbook.xlsx'
         wb = load_workbook(filename=filedir)
         sheet = wb.active
