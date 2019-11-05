@@ -105,7 +105,7 @@ class ManualReporter:
             if row[7].value == "MS":
                 ws1.append([cell.value for cell in row])
                 continue
-            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE IN" not in row[9].value and "TEMPORARY CHECK" not in row[9].value and "ME" not in row[1].value and "72531" not in row[1].value and "76823" not in row[1].value and "INTERFACTORY ROUTING" not in row[9].value and "72515" not in row[1].value and "Release In" not in row[1].value and "Temporary Check" not in row[1].value and "TEMPORARY CHECK" not in row[1].value:
+            if row[4].value != "F" and "AS" not in row[8].value and int(row[7].value) < 60 and row[0].value != "" and "RELEASE IN" not in row[9].value and "TEMPORARY CHECK" not in row[9].value and "ME" not in row[1].value and "72531" not in row[1].value and "76823" not in row[1].value and "INTERFACTORY ROUTING" not in row[9].value and "72515" not in row[1].value and "Release In" not in row[1].value and "Temporary Check" not in row[1].value:
                 ws1.append([cell.value for cell in row])
 
     def check_rows(self):
@@ -125,9 +125,6 @@ class ManualReporter:
                 self.deadrows.append(wtrow)
             key = (wtrow[3].value, wtrow[2].value)
             indexed_wt[key] = wtrow
-        # for wtrow in wt.iter_rows():# Creates a Dictionary of the New Report's Trimmed Sheet
-        #    key = (wtrow[3].value, wtrow[2].value)
-        #    indexed_wt[key].append(wtrow)
         saprows = list(sap.iter_rows())
         for saprow in saprows:  # For Each Row in the Old Report
             # Sets PartNum & OpCode as Keys
