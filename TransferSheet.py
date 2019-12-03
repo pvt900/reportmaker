@@ -56,7 +56,8 @@ class TransferSheet:
 
         utsheet = self.utbook.worksheets[2] #Sheet w/ Untimed Report 
         macsheet = self.macbook.worksheets[0] # Macro Workbook Sheets 
-        new_mac = self.macbook.create_sheet("Untimed Datas", 1) #New Sheet in the Macro book
+        new_mac = self.macbook.create_sheet("Upload Sheet", 1) #New Sheet in the Macro book
+        
         new_mac = self.macbook.worksheets[1] #Selects the New Sheet.
 
         index_mac = {} # Initializes the Dictionary
@@ -68,10 +69,10 @@ class TransferSheet:
         for ut_rows in utsheet.iter_rows(): # Iterates Through the Rows of the Report
             key = (ut_rows[3].value, ut_rows[2].value) # Part/Op is the Key
             if index_mac.get(key) == None: # if the current Key from Row X doesn't exist
-                new_mac.append([cell.value for cell in ut_rows]) # Add it to the Sheet
+                new_mac.append([cell.value for cell in ut_rows]) # Add it to the Upload Sheet
+                macsheet.append([cell.value for cell in ut_rows]) # Add to Log Sheet to Prevent duplicates.
 
-        std = self.macbook.worksheets[0] # Sets the Old Macro Sheet as std
-        self.macbook.remove(std) # Deletes the old Sheet so the New Populated Sheet is the only One
+
 
     def save_sheet(self):
         '''
