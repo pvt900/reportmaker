@@ -98,7 +98,7 @@ class ManualReporter:
         '''
         wt = self.wb_wt.worksheets[0]  # Sets the First Sheet in the Second Report as the var wt
         # Create a Spare Sheet in the First Report to place the Adjusted Data
-        ws1 = self.wb_wt.create_sheet("Sheet 1 - Sorted", 1)
+        ws1 = self.wb_wt.create_sheet("Parts Sorted", 1)
         ws1 = self.wb_wt.worksheets[1]  # Sets ws1 as the Active Second Sheet for New Data\
 
         for row in wt.iter_rows():
