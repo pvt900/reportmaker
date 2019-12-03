@@ -42,6 +42,8 @@ class ManualReporter:
         self.wb_wt = None
         self.XT = 0  # X's -> T's
         self.TT = 0  # T's -> T's
+        self.spoXT = 0
+        self.spoTT = 0
         self.NP = 0  # Non Payables (E)
         self.P = 0  # Payables (X)
         self.PSPO = 0 # Payables for SPO(X)
@@ -137,9 +139,15 @@ class ManualReporter:
                     break
             if wtrow[4].value in ("T", "P"):  # New Report Entry is Marked as T/P
                 if saprow[4].value == "X":  # Old Report Entry is Marked as X
-                    self.XT += 1  # Increment X->Ts Counts
+                    if saprow[0].value in self.dept_spo:
+                        self.spoXT +=1
+                    else:
+                        self.XT += 1  # Increment X->Ts Counts
                 else:
-                    self.TT += 1  # Increment T->T Count
+                    if saprow[0].value in self.dept_spo:
+                        self.spoTT +=1
+                    else:
+                        self.TT += 1  # Increment T->T Count
         # This Print Counts the Xs->Ts Discounting any Duplicates.
         #print (len([item for item, count in collections.Counter(lst).items() if count > 1]))
  
@@ -238,7 +246,7 @@ class ManualReporter:
         data = [[currentDT.strftime("%m/%d/%Y"), (self.spo["F9"] + self.spo["F9A"] + self.spo["F9B"] + self.spo["F9X"]),
          self.spo["F11A"], (self.spo["Insourced"] + self.spo["Tooling"] + self.spo["RCI"]), self.spo["7RMY20"],self.spo["LYNX"],self.spo["None"],
           (self.spo["Maximus"]+self.spo["Saturn"]+self.spo["Legacy"]+self.spo["Pre-IT4"]+self.spo["Multiple"]+self.spo["Aeros"]+self.spo["Isis"]), self.total_spo,
-          self.NPSPO,self.PSPO,self.me_approval_spo,self.x_issued_spo,self.t_issued_spo,self.XT,0,0,0,0,0, self.costhr ]]
+          self.NPSPO,self.PSPO,self.me_approval_spo,self.x_issued_spo,self.t_issued_spo,self.spoXT,0,0,0,0,0, self.costhr ]]
         for row in data:  # Appends the Data Row to the Report
             ws.append(row)
         tablelength = ws.max_row  # Determines the Length of the Table w/ the Data now
