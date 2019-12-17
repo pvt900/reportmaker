@@ -193,9 +193,9 @@ class ManualReporter:
         currentDT = datetime.datetime.now()  # Current Data
         # Variable Data is the data that get written to the Report
         data = [[currentDT.strftime("%m/%d/%Y"), (self.dto["F9"] + self.dto["F9A"] + self.dto["F9B"] + self.dto["F9X"]),
-         self.dto["F11A"], (self.dto["Insourced"] + self.dto["Tooling"] + self.dto["RCI"]), self.dto["7RMY20"],self.dto["LYNX"],self.dto["None"],
-          (self.dto["Maximus"]+self.dto["Saturn"]+self.dto["Legacy"]+self.dto["Pre-IT4"]+self.dto["Multiple"]+self.dto["Aeros"]+self.dto["Isis"]), self.total_dto,
-          self.NP,self.P,self.me_approval,self.x_issued,self.t_issued,self.XT,0,0,0,0,0, self.costhr ]]
+            self.dto["F11A"], (self.dto["Insourced"] + self.dto["Tooling"] + self.dto["RCI"]), self.dto["7RMY20"],self.dto["LYNX"],self.dto["None"],
+            (self.dto["Legacy"]+self.dto["Pre-IT4"]+self.dto["Multiple"]+self.dto["Aeros"]), self.total_dto,
+            self.NP,self.P,self.me_approval,self.x_issued,self.t_issued,self.XT, (self.dto["Maximus"]+self.dto["Saturn"]+self.dto["Isis"]),0,0,0, self.costhr ]]
         for row in data:  # Appends the Data Row to the Report
             ws.append(row)
         tablelength = ws.max_row  # Determines the Length of the Table w/ the Data now
@@ -243,10 +243,12 @@ class ManualReporter:
         #         self.sevenr, self.lynx, self.new, (
         #             self.pre+self.saturn+self.maxim+self.legacy+self.aeros+self.isis),
         #         (self.cipp + self.noncipp), self.NP, self.P, self.me_approval, self.x_issued, self.t_issued, self.XT, 0, 0, 0, 0, 0, self.costhr]]
+        # Maximus, Saturn, ISIS - NEw Column, Call it FT4/IT4
         data = [[currentDT.strftime("%m/%d/%Y"), (self.spo["F9"] + self.spo["F9A"] + self.spo["F9B"] + self.spo["F9X"]),
-         self.spo["F11A"], (self.spo["Insourced"] + self.spo["Tooling"] + self.spo["RCI"]), self.spo["7RMY20"],self.spo["LYNX"],self.spo["None"],
-          (self.spo["Maximus"]+self.spo["Saturn"]+self.spo["Legacy"]+self.spo["Pre-IT4"]+self.spo["Multiple"]+self.spo["Aeros"]+self.spo["Isis"]), self.total_spo,
-          self.NPSPO,self.PSPO,self.me_approval_spo,self.x_issued_spo,self.t_issued_spo,self.spoXT,0,0,0,0,0, self.costhr ]]
+            self.spo["F11A"], (self.spo["Insourced"] + self.spo["Tooling"] + self.spo["RCI"]), self.spo["7RMY20"],self.spo["LYNX"],self.spo["None"],
+            (self.spo["Legacy"]+self.spo["Pre-IT4"]+self.spo["Multiple"]+self.spo["Aeros"]), 
+            self.total_spo,self.NPSPO,self.PSPO,self.me_approval_spo,self.x_issued_spo,
+            self.t_issued_spo,self.spoXT,(self.spo["Maximus"]+self.spo["Saturn"]+self.spo["Isis"]),0,0,0,self.costhr]]
         for row in data:  # Appends the Data Row to the Report
             ws.append(row)
         tablelength = ws.max_row  # Determines the Length of the Table w/ the Data now
@@ -429,4 +431,3 @@ class ManualReporter:
 #    print("Program Runtime: ", progE - progS)
 #if __name__ == "__main__":
 #     main()
-
