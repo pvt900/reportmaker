@@ -15,7 +15,6 @@ import collections
 import datetime
 import time
 import os
-import os.path
 import win32com.client
 
 
@@ -109,6 +108,7 @@ class TransferSheet:
 ##
 ## This is the Main Section, This is where the Program is Called and Ran. 
 ## Don't edit this Section unless 100% you know what you're editting.
+##
 
 def main():
     x = TransferSheet()
