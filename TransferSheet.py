@@ -54,8 +54,8 @@ class TransferSheet:
         '''
 
         utsheet = self.utbook.worksheets[2] #Sheet w/ Untimed Report 
-        macsheet = self.macbook.worksheets[0] # Macro Workbook Sheets 
-        new_mac = self.macbook.create_sheet("Upload Sheet", 1) #New Sheet in the Macro book
+        macsheet = self.macbook.worksheets[0] # Macro Workbook Log Sheet.
+        new_mac = self.macbook.create_sheet("Upload Sheet", 1) #New Upload in the Macro book
         
         new_mac = self.macbook.worksheets[1] #Selects the New Sheet.
 
