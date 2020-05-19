@@ -383,7 +383,7 @@ class ManualReporter:
             upper = datetime.datetime.now().strftime("%Y-%m-%d")
             lower = datetime.datetime.strptime(lower, "%Y-%m-%d")
             upper = datetime.datetime.strptime(upper, "%Y-%m-%d")
-        # This loop iterates through the Worktracker file. To change the month modify the value below.
+        # This loop iterates through the Worktracker file. 
         for row in sheet.iter_rows():
             if "Date of Ch" not in str(row[1].value):
                 #date = datetime.datetime.strptime(row[1].value[:10], "%Y-%m-%d")
