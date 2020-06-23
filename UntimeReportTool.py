@@ -104,6 +104,7 @@ class ManualReporter:
         ws1 = self.wb_wt.worksheets[1]  # Sets ws1 as the Active Second Sheet for New Data\
 
         for row in wt.iter_rows():
+            print(row)
             if row[7].value == "MS":
                 ws1.append([cell.value for cell in row])
                 continue

@@ -15,7 +15,6 @@ import collections
 import datetime
 import time
 import os
-import win32com.client
 
 
 class TransferSheet:
